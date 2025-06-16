@@ -5,7 +5,7 @@ Este proyecto forma parte del módulo de Python del Master en Ciencia de Datos i
 ## Estructura del repositorio
 
 - `README.md`: documento actual que resume el proceso y contiene este informe.
-- `ejercicios_extraidos.py`: Contiene todos los ejercicios resueltos, numerados y comentados con su enunciado y documentación.
+- `ejercicios_python.py`: Contiene todos los ejercicios resueltos, numerados y comentados con su enunciado y documentación.
 - `EnunciadoDataProjectPython`: PDF con los encunciados de los ejercicios del proyecto
 
 ---
