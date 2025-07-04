@@ -37,45 +37,19 @@ Escribe una función que tome una lista de palabras y una palabra objetivo como 
 lista_palabras1 = ["pimiento", "cebolla", "calabacin", "tomate", "uva"]
 palabra1 = "pimiento"
 
-def encontrar_palabra(lista, palabra):
+def encontrar_palabra(lista, palabra_objetivo):
     """Busca una palabra exacta en una lista de palabras.
     
     Args:
         lista (list): Lista de palabras donde buscar.
-        palabra (str): Palabra a buscar.
+        palabr_onjetivo (str): Palabra a buscar.
         
     Returns:
         list: Lista con las coincidencias exactas encontradas.
     """
-    lista_final = []
-    for e in lista:
-        if e == palabra:
-            lista_final.append(e)
-        else:
-            continue
-    return lista_final
+    return[palabra for palabra in lista if palabra_objetivo in palabra]
 
 encontrar_palabra(lista_palabras1,palabra1)
-
-def encontrar_letra(lista, letra):
-    """Busca palabras que contienen una letra específica.
-    
-    Args:
-        lista (list): Lista de palabras donde buscar.
-        letra (str): Letra a buscar en las palabras.
-        
-    Returns:
-        list: Lista de palabras que contienen la letra especificada.
-    """
-    lista_final = []
-    for e in lista:
-        if letra in e:
-            lista_final.append(e)
-        else:
-            continue
-    return lista_final
-
-encontrar_letra(lista_palabras1,"e")
 
 
 """Ejercicio 4:
@@ -103,24 +77,19 @@ resta_listas(lista1, lista2)
 """Ejercicio 5:
 Escribe una función que tome una lista de números como parámetro y un valor opcional nota_aprobado, que por defecto es 5. La función debe calcular la media de los números en la lista y determinar si la media es mayor o igual que nota aprobado. Si es así, el estado será "aprobado", de lo contrario, será "suspenso". La función debe devolver una tupla que contenga la media y el estado.
 """
-def evaluar_notas(notas, aprobado):
+def evaluar_notas(notas, aprobado=5):
     """Calcula la media de una lista de notas y determina si está aprobado.
     
     Args:
         notas (list): Lista de notas numéricas.
-        aprobado (float): Nota mínima para aprobar.
+        aprobado (float): Nota mínima para aprobar. Por defecto: 5.
         
     Returns:
         tuple: Tupla con la media y el estado (aprobado/suspenso).
     """
-    media_notas= sum(notas) / len(notas)
-    resultado = []
-    resultado.append(media_notas)
-    if media_notas >= aprobado:
-        resultado.append("Aprobado")    
-    else:
-        resultado.append("Suspenso")
-    return tuple(resultado)
+    media_notas= sum(notas) / len(notas) if notas else 0
+    estado = "Aprobado" if media_notas >= aprobado else "Suspenso"
+    return media_notas, estado
 
 lista_notas = [5, 7, 8, 9, 10]
 valor_aprobado = 5
@@ -197,6 +166,11 @@ def mascotas_permitidas(lista_mascotas):
 """Ejercicio 10:
 Escribe una función que reciba una lista de números y calcule su promedio. Si la lista está vacía, lanza una excepción personalizada y maneja el error adecuadamente.
 """
+class ListaVaciaError(Exception):
+    """Excepción personalizada que se lanza cuando se intenta calcular el promedio de una lista vacía.
+    """
+    pass
+
 def calcular_promedio(lista_numeros):
     """Calcula el promedio de una lista de números.
     
@@ -206,11 +180,17 @@ def calcular_promedio(lista_numeros):
     Returns:
         float: Promedio de los números o mensaje de error si la lista está vacía.
     """
-    try:
-        promedio = sum(lista_numeros) / len(lista_numeros)
-        return round(promedio,2)
-    except len(lista_numeros) == 0:
-        return "La lista está vacía"
+    if not lista_numeros:
+        raise ListaVaciaError("No se puede calcular el promedio de una lista vacía.")
+    else:
+        return round(sum(lista_numeros) / len(lista_numeros),2)
+
+#Uso
+try:
+    resultado = calcular_promedio([])
+    print(f"El promedio es {resultado}")
+except ListaVaciaError as e:
+    print(f"Error: {e}")
 
 
 """Ejercicio 11:
@@ -298,8 +278,18 @@ cadena = "Vamos a por ello, no hay que rendirse aunque sea dificil. Sin miedo."
 len(cadena)
 
 def longitudes_palabras(cadena, longitud):
+    """Genera una lista con las palabras más largas que una longitud dada.
+
+    Args:
+        cadena (string): Cadena de palabras.
+        longitud (int): Numero que representa la longitud por la que se filtraran las palabras de la cadena (no incluido).
+
+    Returns:
+        Lista de palabras con una longitud mayor que la dada.
+    """
     return list(filter(lambda x: len(x) > longitud, cadena.split()))
 
+#Uso
 resultado_cadena = longitudes_palabras(cadena,7)
 resultado_cadena
 
@@ -310,22 +300,20 @@ Crea una función que tome una lista de dígitos y devuelva el número correspon
 from functools import reduce
 
 def lista_numero(lista_digitos):
-    return reduce(lambda acumulado, digito: acumulado * 10 + digito, lista_digitos)
+    """Devuelve un número formado a partir de una lista de numeros.
 
+    Args:
+        lista_digitos (lista): Lista de números.
+
+    Returns:
+        Numero compuesto por los números de la lista de digitos.
+    """
+    return reduce(lambda acc, d: acc * 10 + d, lista_digitos, 0)
+
+#Uso
 resultado_numero = lista_numero([4, 3, 6, 5, 7, 2])
-print(resultado)
+print(resultado_numero)
 
-# Definimos una función que hace lo mismo que la lambda
-def acumular_digitos(acumulado, digito):
-    return acumulado * 10 + digito
-
-# Usamos reduce con esa función
-def lista_a_numero(digitos):
-    return reduce(acumular_digitos, digitos)
-
-# Ejemplo de uso
-resultado = lista_a_numero([5, 7, 2])
-print(resultado)  # Imprime: 572
 
 """Ejercicio 18:
 Escribe un programa en Python que cree una lista de diccionarios que contenga información de estudiantes (nombre, edad, calificación) y use la función filter para extraer a los estudiantes con una calificación mayor o igual a 90. Usa la función filter()
@@ -371,19 +359,11 @@ list(filter(lambda x: type(x) == int , ["pie", 2.5, 3, "hola", 4, 5.6, 6, "adios
 """Ejercicio 21:
 Crea una función que calcule el cubo de un número dado mediante una función lambda
 """
-def calcular_cubo(x):
-    """Calcula el cubo de un número usando una función lambda.
-    
-    Args:
-        x (int/float): Número a elevar al cubo.
-        
-    Returns:
-        function: Función lambda que calcula el cubo.
-    """
-    return lambda x: x ** 3
 
-resultado_cubo = calcular_cubo(3)
-resultado_cubo(3)
+calcular_cubo = lambda x: x ** 3
+
+#Uso
+calcular_cubo(3)
 
 
 """Ejercicio 22:
@@ -527,7 +507,7 @@ def encontrar_nombre(lista_nombres, nombre):
     if nombre.lower() in nombres_normalizados:
         return f"El nombre {nombre} se encuentra en la lista"
     else:
-        return f"El nombre {nombre} no se encuentra en la lista"
+        raise ValueError(f"El nombre {nombre} no se encuentra en la lista")
 
 lista_nombres = ["Ana", "Luis", "Marta", "Pedro", "Sofía"]
 nombre_a_buscar = "Marta"
@@ -572,44 +552,52 @@ print(resultado_suma)
 Crea la clase Arbol, define un árbol genérico con un tronco y ramas como atributos. Los métodos disponibles son: crecer_tronco, nueva_rama, crecer_ramas, quitar_rama e info_arbol. El objetivo es implementar estos métodos para manipular la estructura del árbol.
 """
 class Arbol:
-    """Clase que representa un árbol con tronco y ramas.
-    
-    Attributes:
-        tronco (int): Longitud del tronco.
-        ramas (list): Lista de longitudes de las ramas.
-    """
-    
+    """Clase que representa un árbol con un tronco y una lista de ramas."""
+
     def __init__(self):
         """Inicializa un árbol con tronco de longitud 1 y sin ramas."""
-        # ... existing code ...
-    
+        self.tronco = 1
+        self.ramas = []
+
     def crecer_tronco(self):
         """Aumenta la longitud del tronco en una unidad."""
-        # ... existing code ...
-    
+        self.tronco += 1
+
     def nueva_rama(self):
-        """Añade una nueva rama de longitud 1."""
-        # ... existing code ...
-    
+        """Añade una nueva rama de longitud 1 al árbol."""
+        self.ramas.append(1)
+
     def crecer_ramas(self):
-        """Aumenta la longitud de todas las ramas en una unidad."""
-        # ... existing code ...
-    
+        """Aumenta en una unidad la longitud de todas las ramas existentes."""
+        self.ramas = [rama + 1 for rama in self.ramas]
+
     def quitar_rama(self, posicion):
-        """Elimina una rama en la posición especificada.
-        
+        """Elimina la rama en la posición especificada.
+
         Args:
-            posicion (int): Posición de la rama a eliminar.
+            posicion (int): Índice de la rama a eliminar (comenzando desde 0).
+
+        Raises:
+            IndexError: Si la posición no es válida.
         """
-        # ... existing code ...
-    
+        if 0 <= posicion < len(self.ramas):
+            self.ramas.pop(posicion)
+        else:
+            raise IndexError("Posición de rama inválida")
+
     def info_arbol(self):
-        """Obtiene información sobre el estado actual del árbol.
-        
+        """Devuelve información sobre el estado actual del árbol.
+
         Returns:
-            dict: Diccionario con información del árbol.
+            dict: Diccionario con la longitud del tronco, el número de ramas
+            y las longitudes de cada una.
         """
-        # ... existing code ...
+        return {
+            "longitud_tronco": self.tronco,
+            "num_ramas": len(self.ramas),
+            "longitudes_ramas": self.ramas.copy()
+        }
+
 
 
 """Ejercicio 35:
@@ -659,7 +647,9 @@ class UsuarioBanco:
             saldo (float): Saldo inicial.
             cuenta_corriente (bool): Indica si tiene cuenta corriente.
         """
-        # ... existing code ...
+        self.nombre = nombre
+        self.saldo = saldo
+        self.cuenta_corriente = cuenta_corriente
     
     def retirar_dinero(self, cantidad):
         """Retira dinero del saldo del usuario.
@@ -667,7 +657,12 @@ class UsuarioBanco:
         Args:
             cantidad (float): Cantidad a retirar.
         """
-        # ... existing code ...
+        if cantidad < 0:
+            raise ValueError("La cantidad debe ser positiva")
+        if cantidad > self.saldo:
+            raise ValueError("Saldo insuficiente")
+        self.saldo -= cantidad
+        return self.saldo
     
     def transferir_dinero(self, otro_usuario, cantidad):
         """Transfiere dinero desde otro usuario.
@@ -676,7 +671,8 @@ class UsuarioBanco:
             otro_usuario (UsuarioBanco): Usuario desde el que transferir.
             cantidad (float): Cantidad a transferir.
         """
-        # ... existing code ...
+        self.retirar_dinero(cantidad)
+        otro_usuario.agregar_dinero(cantidad)
     
     def agregar_dinero(self, cantidad):
         """Añade dinero al saldo del usuario.
@@ -684,7 +680,10 @@ class UsuarioBanco:
         Args:
             cantidad (float): Cantidad a añadir.
         """
-        # ... existing code ...
+        if cantidad < 0:
+            raise ValueError("La cantidad debe ser positiva")
+        self.saldo += cantidad
+        return self.saldo
 
 
 """Ejercicio 37:
